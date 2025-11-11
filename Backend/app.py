@@ -8,10 +8,18 @@ from pathlib import Path
 import traceback
 
 app = Flask(__name__)
-CORS(app)
+
+# FIX: Comprehensive CORS configuration
+CORS(app, resources={
+    r"/*": {
+        "origins": ["http://localhost:3000", "http://127.0.0.1:3000", "*"],
+        "methods": ["GET", "POST", "PUT", "DELETE"],
+        "allow_headers": ["Content-Type", "Authorization", "Accept"]
+    }
+})
 
 # Configuration
-MODEL_DIR = os.getenv('MODEL_DIR', './models')
+MODEL_DIR = os.getenv('MODEL_DIR', './models')  # Make sure this points to your models folder
 
 # Available classifiers and their models
 AVAILABLE_CLASSIFIERS = {
@@ -113,6 +121,17 @@ def get_feature_names_from_model(model):
     
     return None
 
+# Add this debug middleware to see incoming requests
+@app.before_request
+def log_request_info():
+    print(f"📥 Incoming {request.method} request to {request.path}")
+    print(f"📦 Headers: {dict(request.headers)}")
+    print(f"🔍 Query params: {request.args}")
+    if request.is_json:
+        print(f"📄 JSON data: {request.get_json()}")
+    else:
+        print(f"📄 Form data: {request.form}")
+
 @app.route('/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
@@ -131,9 +150,17 @@ def list_classifiers():
         'default_models': DEFAULT_MODELS
     }), 200
 
-@app.route('/predict/<classifier>', methods=['POST'])
+@app.route('/predict/<classifier>', methods=['POST', 'OPTIONS'])
 def predict_single(classifier):
     """Predict single classifier with default or specified model"""
+    # Handle preflight OPTIONS request
+    if request.method == 'OPTIONS':
+        response = jsonify({'status': 'ok'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', '*')
+        response.headers.add('Access-Control-Allow-Methods', '*')
+        return response
+    
     try:
         print(f"\n=== Prediction Request for {classifier} ===")
         
@@ -196,7 +223,11 @@ def predict_single(classifier):
             result['class_labels'] = ['Negative', 'Positive']
         
         print(f"=== Request Successful ===\n")
-        return jsonify(result), 200
+        
+        # Add CORS headers to response
+        response = jsonify(result)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response, 200
         
     except ValueError as e:
         print(f"Validation error: {str(e)}")
@@ -352,41 +383,6 @@ def model_info(classifier):
     except Exception as e:
         return jsonify({'error': f'Failed to load model info: {str(e)}'}), 500
 
-@app.route('/inspect-model/<classifier>', methods=['GET'])
-def inspect_model(classifier):
-    """Debug endpoint to inspect model file structure"""
-    try:
-        if classifier not in AVAILABLE_CLASSIFIERS:
-            return jsonify({
-                'error': f'Invalid classifier. Must be one of: {", ".join(AVAILABLE_CLASSIFIERS.keys())}'
-            }), 400
-        
-        model_type = request.args.get('model', DEFAULT_MODELS[classifier])
-        model_path = os.path.join(MODEL_DIR, f"classifier_{classifier}__{model_type}.pkl")
-        
-        if not os.path.exists(model_path):
-            return jsonify({'error': f'Model file not found: {model_path}'}), 404
-        
-        loaded_obj = joblib.load(model_path)
-        
-        info = {
-            'file_path': model_path,
-            'object_type': str(type(loaded_obj)),
-            'is_dict': isinstance(loaded_obj, dict)
-        }
-        
-        if isinstance(loaded_obj, dict):
-            info['dict_keys'] = list(loaded_obj.keys())
-            info['dict_structure'] = {k: str(type(v)) for k, v in loaded_obj.items()}
-        else:
-            info['has_predict'] = hasattr(loaded_obj, 'predict')
-            info['has_predict_proba'] = hasattr(loaded_obj, 'predict_proba')
-        
-        return jsonify(info), 200
-        
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({'error': 'Endpoint not found'}), 404
@@ -409,7 +405,11 @@ if __name__ == '__main__':
         for pkl_file in pkl_files:
             print(f"   - {pkl_file.name}")
     
-    # Run Flask app
-    port = int(os.getenv('PORT', 5000))
-    print(f"\n🚀 Python Classification Service starting on port {port}\n")
+    # Run Flask app - IMPORTANT: Use 0.0.0.0 to accept external connections
+    port = int(os.getenv('PORT', 5001))
+    print(f"\n🚀 Python Classification Service starting on port {port}")
+    print(f"📍 Accessible at: http://localhost:{port}")
+    print(f"🌐 Also accessible at: http://127.0.0.1:{port}")
+    print(f"🔗 External connections: http://0.0.0.0:{port}\n")
+    
     app.run(host='0.0.0.0', port=port, debug=True)

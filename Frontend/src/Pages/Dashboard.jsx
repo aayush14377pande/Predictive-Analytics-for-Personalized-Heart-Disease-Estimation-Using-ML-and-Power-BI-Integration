@@ -13,7 +13,7 @@ function Dashboard() {
     { 
       icon: <Activity className="w-6 h-6" />, 
       label: "Blood Pressure", 
-      value: "120/80", 
+      value: "120/80 mmHg", 
       color: "text-blue-500", 
       bg: "bg-blue-50" 
     },
@@ -34,8 +34,9 @@ function Dashboard() {
   ];
 
   return (
-    <section className="max-w-6xl mx-auto">
-      <div className="mb-8">
+    <section className="max-w-6xl mx-auto px-4">
+      {/* Header */}
+      <div className="mb-8 text-center md:text-left">
         <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
           Patient Data Dashboard
         </h2>
@@ -44,7 +45,8 @@ function Dashboard() {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-4 gap-6 mb-8">
+      {/* Vital Stats Cards */}
+      <div className="grid md:grid-cols-4 sm:grid-cols-2 gap-6 mb-8">
         {vitals.map((vital, index) => (
           <div 
             key={index} 
@@ -59,16 +61,23 @@ function Dashboard() {
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl p-12 shadow-lg border border-gray-100">
+      {/* Analytics Section */}
+      <div className="bg-white rounded-2xl p-8 md:p-12 shadow-lg border border-gray-100">
         <div className="text-center">
           <div className="inline-flex p-6 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full mb-6">
             <BarChart3 className="w-16 h-16 text-blue-600" />
           </div>
           <h3 className="text-2xl font-bold text-gray-800 mb-3">Interactive Analytics</h3>
-          <p className="text-gray-500 max-w-xl mx-auto">
-            Comprehensive charts and time series visualizations will display here, showing patient trends,
-            anomaly detection, and predictive insights powered by advanced analytics.
-          </p>
+
+          <iframe 
+            title="Minor Project Dashboard"
+            width="100%" 
+            height="541.25" 
+            src="https://app.powerbi.com/reportEmbed?reportId=66d24b05-88a4-4d32-8c0e-a7febd1f5e02&autoAuth=true&ctid=0ed51ad7-52cc-4234-b54a-76b82d40b5c3" 
+            frameBorder="0" 
+            allowFullScreen
+            className="rounded-xl shadow-md border border-gray-200"
+          ></iframe>
         </div>
       </div>
     </section>

@@ -20,7 +20,9 @@ function Header() {
             <Activity className="w-6 h-6 text-white" />
           </div>
           <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Time Series Patient Diagnosis
+          Predictive Analytics for Personalized Heart-Disease
+Estimation Using Machine Learning and Power BI
+Integration
           </h1>
         </div>
         <nav className="flex space-x-2">

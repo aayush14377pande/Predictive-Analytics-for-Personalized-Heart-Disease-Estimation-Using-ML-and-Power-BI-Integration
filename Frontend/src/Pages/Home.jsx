@@ -6,19 +6,19 @@ function Home() {
     {
       icon: <BarChart3 className="w-8 h-8 text-blue-600" />,
       title: "Patient Trends",
-      description: "Visualize historical medical data to identify patient condition patterns over time.",
+      description: "",
       gradient: "from-blue-500 to-cyan-500"
     },
     {
       icon: <Brain className="w-8 h-8 text-purple-600" />,
       title: "AI Predictions",
-      description: "Use trained models to forecast potential diagnoses and health outcomes accurately.",
+      description: "",
       gradient: "from-purple-500 to-pink-500"
     },
     {
       icon: <TrendingUp className="w-8 h-8 text-green-600" />,
       title: "Real-time Insights",
-      description: "Access up-to-date health metrics for timely clinical interventions and care.",
+      description: "",
       gradient: "from-green-500 to-emerald-500"
     }
   ];
@@ -27,7 +27,9 @@ function Home() {
     <section className="text-center max-w-6xl mx-auto">
       <div className="mb-12">
         <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-6">
-          Welcome to the Future of Healthcare
+        Predictive Analytics for Personalized Heart-Disease
+Estimation Using Machine Learning and Power BI
+Integration
         </h2>
         <p className="max-w-3xl mx-auto text-lg text-gray-600 leading-relaxed">
           This platform leverages time series data and AI models to analyze and predict patient health outcomes.
@@ -50,13 +52,13 @@ function Home() {
         ))}
       </div>
 
-      <div className="mt-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white shadow-xl">
+      {/* <div className="mt-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white shadow-xl">
         <h3 className="text-2xl font-bold mb-3">Ready to get started?</h3>
         <p className="mb-6 text-blue-100">Upload patient data and experience AI-powered diagnosis predictions.</p>
         <button className="bg-white text-blue-600 font-semibold px-8 py-3 rounded-xl hover:bg-blue-50 transition-all duration-200 hover:scale-105 shadow-lg">
           Get Started Now
         </button>
-      </div>
+      </div> */}
     </section>
   );
 }

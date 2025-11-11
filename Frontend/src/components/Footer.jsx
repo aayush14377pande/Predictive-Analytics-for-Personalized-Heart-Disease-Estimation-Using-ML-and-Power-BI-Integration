@@ -7,10 +7,12 @@ function Footer() {
       <div className="container mx-auto text-center">
         <div className="flex items-center justify-center space-x-2 mb-3">
           <Activity className="w-5 h-5 text-blue-400" />
-          <span className="font-semibold text-white">Time Series Patient Diagnosis</span>
+          <span className="font-semibold text-white">Predictive Analytics for Personalized Heart-Disease
+Estimation Using Machine Learning and Power BI
+Integration</span>
         </div>
         <p className="text-sm">
-          © {new Date().getFullYear()} All rights reserved | Built with React + Tailwind CSS
+          © {new Date().getFullYear()} Final Year Project
         </p>
       </div>
     </footer>
